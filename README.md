@@ -1,2 +1,2 @@
-# 15 puzzle
-Place the tiles in numerical order.
+# Grimm Tiles
+Once upon a time...
