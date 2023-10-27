@@ -12,12 +12,14 @@ let board = initBoard();
 let boardSolved = initBoard();
 let bombTiles = [];
 let time = null;
+let timeInterval;
 let moves = 0;
+let ursSearchParams = new URLSearchParams(window.location.search);
 
 function startTimer() {
     time = 0;
 
-    setInterval(() => {
+    timeInterval = setInterval(() => {
         time++;
         $('.content__stat-time-val').attr('data-val', time);
     }, 1000);
@@ -100,14 +102,16 @@ function shuffleBoard(board, moves = 1000) {
 
 function drawBoard(board) {
     let boardWrapper = $('.board');
+    const imgNum = ursSearchParams.get('imgNum') ?? 2;
 
     boardWrapper.html('');
 
-    board.forEach((row) => {
-        row.forEach((num) => {
+    board.forEach((row, i) => {
+        row.forEach((num, j) => {
+            let tileRealPos = findTilePosByNum(boardSolved, num);
             let tile = $('<div class="board__tile">')
                 .attr('data-num', num ?? '')
-                .attr('style', 'background-image: url(img/puzzles/1/' + num + '.png)')
+                .attr('style', 'background-image: url(img/puzzles/' + imgNum + '/' + tileRealPos.x + tileRealPos.y + '.png)')
                 .html(num);
 
             if (bombTiles.includes(num)) {
@@ -146,11 +150,10 @@ function clickTile(board, tileEl) {
         if (JSON.stringify(newTilePos) === JSON.stringify(emptyPos)) {
             swapTiles(board, emptyPos.x, emptyPos.y, tilePos.x, tilePos.y);
             drawBoard(board);
+            setMoves();
             continue;
         }
     }
-
-    setMoves();
 
     bombTilesCheck(board);
 
@@ -216,12 +219,18 @@ function winConCheck(board) {
     if (puzzleSolved) {
         setTimeout(() => {
             alert('You win!');
+            clearInterval(timeInterval);
+            $('.board__tile').unbind('click');
+
+            $('.board').addClass('board_complete');
+            $('.board__tile[data-num=""]').attr('data-num', 16);
         }, 100);
     }
 }
 
-shuffleBoard(board, 1);
+$('.content__cheats-btn').click(() => $('.board').addClass('board_cheats'));
+
+shuffleBoard(board, ursSearchParams.get('spoil') ?? 1000);
 fillBombTiles(board);
 drawBoard(board);
-
 bombTilesCheck(board);

@@ -3,6 +3,7 @@
 }
 
 main {
+    background-color: #2f3f42;
     min-height: 100vh;
     user-select: none;
 }
@@ -41,16 +42,36 @@ main {
 .board__tile {
     align-items: center;
     background-color: #edcfa7;
+    background-size: contain;
     border: 2px solid #773D13;
     border-radius: 10px;
-    color: #773D13;
+    color: floralwhite;
     cursor: pointer;
     display: flex;
-    font-size: 36px;
+    font-size: 0;
     justify-content: center;
     position: relative;
     height: 72px;
     width: 72px;
+}
+
+.board_cheats .board__tile {
+    font-size: 42px;
+}
+
+.board_complete {
+    height: 306px;
+    width: 306px;
+}
+
+.board_complete .board__tile {
+    border: none;
+    border-radius: unset;
+    font-size: 0;
+}
+
+.board_complete .board__tile:before {
+    display: none;
 }
 
 .board__tile[data-type="bomb"]:before {
@@ -59,11 +80,12 @@ main {
     height: 100%;
     position: absolute;
     width: 100%;
-    background-size: 30px;
+    background-size: 20px;
 }
 
 .board__tile[data-num=""] {
     background-color: #5DC2D9;
+    background-image: none !important;
 }
 
 .content__control {
@@ -87,6 +109,7 @@ main {
     height: 40px;
     justify-content: center;
     margin: 0 auto;
+    text-decoration: none;
     text-transform: uppercase;
     width: 148px;
 }
